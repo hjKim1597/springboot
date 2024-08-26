@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h3> ex 00 화면입니다</h3>
+
+    <th:block th:replace="~{/include/layout03 :: 함수( ~{ :: .container}) }">
+        <div class="container" >
+    회원번호: <span th:text="${vo.num}"></span>
+    이름: <span th:text="${vo.name}"></span>
+    나이: [[${vo.age}]]
+    주소: [[${vo.addr}]]
+    <br>
+링크: <a th:href="@{/view/ex00_result}">리절트화면</a>
+        </div>
+    </th:block>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="함수(a)"> <!--"함수(매개변수)"-->
+<head>
+    <meta charset="UTF-8">
+    <title>공통 템플릿</title>
+</head>
+<body>
+
+    <header>
+        헤더입니다.
+    </header>
+
+    <section>
+        <th:block th:replace="${a}"></th:block> <!--"${매개변수}"-->
+    </section>
+
+    <footer>
+        footer입니다.
+    </footer>
+</body>
+</th:block>
+</html>

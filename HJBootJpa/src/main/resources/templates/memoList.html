@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+    </style>
+
+</head>
+<body>
+
+    <select name="searchType">
+        <option value="mno">번호</option>
+        <option value="text">내용</option>
+        <option value="writer">작성자</option>
+        <option value="textWriter">내용 + 작성자</option>
+    </select>
+    <input type="text" name="searchName">
+    <button type="button" onclick="searchList()">검색</button>
+
+    <table>
+        <thead>
+        <tr>
+            <th>MNO</th>
+            <th>Writer</th>
+            <th>Text</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Sign Date</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+
+    <ul class="pagination" id="pagination">
+        <!-- Pagination buttons will be inserted here by JavaScript -->
+    </ul>
+
+    <script>
+
+        //전역변수
+        var pagination = document.getElementById("pagination");
+        var page = 1;
+        var amount = 10;
+        var start = 0; //시작 페이지 네이션 값
+        var end = 0; // 끝 페이지네이션 값
+
+        //데이터를 ajax 방식으로 요청
+        function getList() {
+            //searchType값
+            var searchType = document.querySelector("select[name=searchType]").value;
+            var searchName = document.querySelector("select[name=searchName]").value;
+            var url = "/getList?page=" +page+ "&amount=" +amount+ "&searchName=" +searchName+ "&searchType=" + searchType;
+             fetch(url)
+             .then(function(response) {
+                return response.json()
+             })
+             .then(function (data) {
+                createBody(data.pageData)
+                createPage(data);
+             })
+        }
+
+        function createBody(list) {
+            var tableBody = document.getElementById("tableBody");
+            var str = "";
+
+            list.forEach(function(data) {
+                str += "<tr>";
+
+                    str += "<td>" + data.mno + "</td>";
+                    str += "<td>" + data.writer + "</td>";
+                    str += "<td>" + data.text + "</td>";
+                    str += "<td>" + data.id + "</td>";
+                    str += "<td>" + data.name + "</td>";
+                    str += "<td>" + data.signDate + "</td>";
+
+                str += "</tr>";
+
+            })
+            tableBody.innerHTML = str;
+
+        }
+
+    </script>
+
+
+</body>
+</html>

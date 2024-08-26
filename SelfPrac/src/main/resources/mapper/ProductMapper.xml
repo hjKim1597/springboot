@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hj00.prac.product.ProductMapper">
+
+    <insert id="productInsert" parameterType="ProductVO">
+    INSERT INTO PRODUCT (
+                 PROD_ENDDATE,
+                 PROD_WRITER,
+                 PROD_NAME,
+                 PROD_PRICE,
+                 PROD_COUNT,
+                 PROD_DISCOUNT,
+                 PROD_PURCHASE_YN,
+                 PROD_CONTENT,
+                 PROD_COMMENT )
+    VALUES (
+            #{prodEnddate},
+            #{prodWriter},
+            #{prodName},
+            #{prodPrice},
+            #{prodCount},
+            #{prodDiscount},
+            #{prodPurchaseYn},
+            #{prodContent},
+            #{prodComment} )
+    </insert>
+
+    <!--목록조회-->
+    <!--동적쿼리 Test 구문에는 VO의 getter나 map, key같이 사용가능-->
+    <select id="getList" resultType="ProductVO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PROD_WRITER = #{userId}
+
+        <!--동적쿼리-->
+        <if test="cri.searchName != '' and cri.searchName != null ">
+            AND PROD_NAME LIKE CONCAT( '%', #{cri.searchName}, '%' )
+        </if>
+        <if test="cri.searchContent != '' and cri.searchContent != null ">
+            AND PROD_CONTENT LIKE CONCAT( '%', #{cri.searchContent}, '%' )
+        </if>
+
+        <if test="cri.startDate != '' and cri.startDate != null ">
+            <![CDATA[AND PROD_ENDDATE >= #{cri.startDate}]]>
+        </if>
+        <if test="cri.endDate != '' and cri.endDate != null ">
+            <![CDATA[AND PROD_ENDDATE <= #{cri.searchContent}]]>
+        </if>
+
+        ORDER BY
+        <if test="cri.searchPrice == 'asc' ">
+            PROD_PRICE ASC,
+        </if>
+        <if test="cri.searchPrice == 'desc' ">
+            PROD_PRICE DESC,
+        </if>
+        PROD_ID DESC
+        LIMIT #{cri.pageStart}, #{cri.amount}
+    </select>
+
+    <!--전체게시글-->
+    <select id="getTotal" resultType="int">
+        SELECT COUNT(*) AS TOTAL
+        FROM PRODUCT
+        WHERE PROD_WRITER = #{userId}
+        <if test="cri.searchName != '' and cri.searchName != null ">
+            AND PROD_NAME LIKE CONCAT( '%', #{cri.searchName}, '%' )
+        </if>
+        <if test="cri.searchContent != '' and cri.searchContent != null ">
+            AND PROD_CONTENT LIKE CONCAT( '%', #{cri.searchContent}, '%' )
+        </if>
+
+        <if test="cri.startDate != '' and cri.startDate != null ">
+            <![CDATA[AND PROD_ENDDATE >= #{cri.startDate}]]>
+        </if>
+        <if test="cri.endDate != '' and cri.endDate != null ">
+            <![CDATA[AND PROD_ENDDATE <= #{cri.searchContent}]]>
+        </if>
+    </select>
+
+
+    <select id="getDetail" resultType="ProductVO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PROD_ID = #{prodId}
+    </select>
+
+
+    <update id="productUpdate" parameterType="ProductVO">
+        UPDATE PRODUCT
+        SET PROD_ENDDATE = #{prodEnddate},
+            PROD_NAME = #{prodName},
+            PROD_PRICE = #{prodPrice},
+            PROD_COUNT = #{prodCount},
+            PROD_DISCOUNT = #{prodDiscount},
+            PROD_PURCHASE_YN = #{prodPurchaseYn},
+            PROD_CONTENT = #{prodContent},
+            PROD_COMMENT = #{prodComment}
+        WHERE PROD_ID = #{prodId}
+    </update>
+
+    <delete id="productDelete" parameterType="int">
+        DELETE FROM PRODUCT WHERE PROD_ID = #{prodId}
+    </delete>
+</mapper>
