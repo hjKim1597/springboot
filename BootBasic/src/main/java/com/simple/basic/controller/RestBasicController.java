@@ -109,8 +109,8 @@ public class RestBasicController {
 
     ///////////////////////////////////////////////////////////////////////////////
     //응답문서 명확하게 작성하기 ResponseEntity<데이터타입>
-//    @CrossOrigin({"http://127.0.0.1:5501", "http://localhost:5501"})
-    @CrossOrigin("*") //모든 서버에 대한 접근 허용 위험 
+    //@CrossOrigin({"http://127.0.0.1:5500", "http://localhost:5500"})
+    @CrossOrigin("*") //모든 서버에 대한 요청을 승인함(위험할 수 있음)
     @PostMapping("/getEntity")
     public ResponseEntity<TestVO> getEntity( @RequestBody TestVO v) {
 
